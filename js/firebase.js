@@ -1,4 +1,6 @@
-// Your web app's Firebase configuration
+// ===============================
+// FIREBASE CONFIG
+// ===============================
 const firebaseConfig = {
   apiKey: "AIzaSyAHyJRd1LzEFh_5sUJBd_ciegzpv7YQ9I4",
   authDomain: "website-penelitian.firebaseapp.com",
@@ -15,27 +17,34 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 // ===============================
-// SUBMIT FORM KUESIONER
+// SUBMIT FORM (AMAN)
 // ===============================
-const form = document.getElementById("surveyForm");
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("questionnaireForm");
 
-form.addEventListener("submit", function (e) {
-  e.preventDefault();
+  if (!form) {
+    console.error("Form questionnaireForm tidak ditemukan");
+    return;
+  }
 
-  const data = {};
-  new FormData(form).forEach((value, key) => {
-    data[key] = value;
-  });
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
 
-  data.timestamp = new Date();
-
-  db.collection("responden").add(data)
-    .then(() => {
-      alert("Terima kasih. Jawaban Anda berhasil disimpan.");
-      form.reset();
-    })
-    .catch(err => {
-      console.error(err);
-      alert("Terjadi kesalahan saat menyimpan data.");
+    const data = {};
+    new FormData(form).forEach((value, key) => {
+      data[key] = value;
     });
+
+    data.timestamp = new Date();
+
+    db.collection("responden").add(data)
+      .then(() => {
+        alert("Terima kasih. Jawaban Anda berhasil disimpan.");
+        form.reset();
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Terjadi kesalahan saat menyimpan data.");
+      });
+  });
 });
